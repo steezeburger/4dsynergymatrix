@@ -1,7 +1,7 @@
 import React from 'react';
 import { Canvas } from "@react-three/fiber";
 import './App.css';
-import Cylinder3d from "./components/Cylinder3d";
+import GleamCube from "./components/GleamCube";
 
 function App() {
   const numRows = 53;
@@ -12,7 +12,7 @@ function App() {
   for (let i = 0; i < numRows; i++) {
     for (let j = 0; j < numCols; j++) {
       cubes.push(
-        <Cylinder3d
+        <GleamCube
           key={`${i}-${j}`}
           wireframe={false}
           position={[

@@ -7,7 +7,7 @@ type Cylinder3dProps = {
   position?: [number, number, number];
 } & MeshProps;
 
-const Cylinder3d: React.FC<Cylinder3dProps> = (props) => {
+const GleamCube: React.FC<Cylinder3dProps> = (props) => {
   const groupRef = useRef<Group>(null);
   const meshRef = useRef<Mesh>(null);
   const [hovered, setHovered] = useState<boolean>(false);
@@ -68,4 +68,4 @@ const Cylinder3d: React.FC<Cylinder3dProps> = (props) => {
   );
 };
 
-export default Cylinder3d;
+export default GleamCube;

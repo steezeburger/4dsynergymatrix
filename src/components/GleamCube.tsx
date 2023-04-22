@@ -1,41 +1,39 @@
-import React, {useEffect, useMemo, useReducer, useRef, useState} from "react";
+import React, {useMemo, useReducer, useRef} from "react";
 import {MeshProps, useFrame} from "@react-three/fiber";
-import {
-  Color,
-  EdgesGeometry,
-  Group,
-  LineBasicMaterial,
-  LineSegments,
-  Mesh,
-  MeshBasicMaterial,
-  ShaderMaterial
-} from "three";
+import {Color, EdgesGeometry, Group, LineBasicMaterial, LineSegments, Mesh, ShaderMaterial} from "three";
 
 type GleamCubeProps = {
   wireframe?: boolean;
   position: [number, number, number];
   position_ij: [number, number];
   color: number;
+  handleCubeClick: (didDestruct: boolean) => void;
 } & MeshProps;
 
 const COLORS = {
   "RED": 0xff0000,
   "GREEN": 0x00ff00,
   "PURPLE": 0xDA70D6,
+  "DESTROYED": 0x000000,
 }
 
-type State = "GREEN" | "RED" | "PURPLE";
+type State = "GREEN" | "RED" | "PURPLE" | "DESTROYED";
 
 const stateMachine: Record<State, State> = {
   GREEN: "RED",
   RED: "PURPLE",
   PURPLE: "GREEN",
+  DESTROYED: "DESTROYED",
 };
 
-function stateReducer(state: State, action: { type: "NEXT" }): State {
+type Actions = { type: "NEXT" } | { type: "DESTRUCT" };
+
+function stateReducer(state: State, action: Actions): State {
   switch (action.type) {
     case "NEXT":
       return stateMachine[state];
+    case "DESTRUCT":
+      return "DESTROYED";
     default:
       return state;
   }
@@ -48,10 +46,15 @@ const GleamCube: React.FC<GleamCubeProps> = (props) => {
   const firstState = props.color === 0xff0000 ? "RED" : "GREEN";
   const [state, dispatch] = useReducer(stateReducer, firstState);
   const handleClick = () => {
-    dispatch({ type: "NEXT" });
+    if (state === "PURPLE") {
+      props.handleCubeClick(true);
+      dispatch({type: "DESTRUCT"});
+    } else {
+      props.handleCubeClick(false);
+      dispatch({type: "NEXT"});
+    }
   }
 
-  const color = COLORS[state];
   if (state === "RED") {
     if (groupRef.current) {
       groupRef.current.rotation.x += 500;
@@ -62,6 +65,7 @@ const GleamCube: React.FC<GleamCubeProps> = (props) => {
       groupRef.current.rotation.y += 500;
     }
   }
+
 
   useFrame((state, delta) => {
     if (groupRef.current) {
@@ -79,6 +83,7 @@ const GleamCube: React.FC<GleamCubeProps> = (props) => {
     }
   }, [meshRef.current]);
 
+  const color = COLORS[state];
   const lineColor = new Color(color);
 
   const gridShaderMaterial = new ShaderMaterial({
@@ -86,25 +91,36 @@ const GleamCube: React.FC<GleamCubeProps> = (props) => {
       lineColor: {value: lineColor},
     },
     vertexShader: `
-      varying vec3 vPosition;
-      void main() {
-        vPosition = position;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
-    `,
+    varying vec3 vPosition;
+    void main() {
+      vPosition = position;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
     fragmentShader: `
-      varying vec3 vPosition;
-      uniform vec3 lineColor;
-      void main() {
-        vec3 color = lineColor;
-        float lineWidth = 0.005;
-        float gridSize = 10.0;
-        vec3 modPosition = mod(vPosition * gridSize + 0.5, 1.0);
-        float mask = step(lineWidth, modPosition.x) * step(lineWidth, modPosition.y) * step(lineWidth, modPosition.z);
-        gl_FragColor = mix(vec4(color, 1.0), vec4(0.0, 0.0, 0.0, 1.0), mask);
-      }
-    `,
+    varying vec3 vPosition;
+    uniform vec3 lineColor;
+
+    float smoothEdge(float value, float threshold, float range) {
+      return smoothstep(threshold - range, threshold + range, value);
+    }
+
+    void main() {
+      vec3 color = lineColor;
+      float lineWidth = 0.05;
+      float gridSize = 10.0;
+      float glowRange = 0.08;
+      vec3 modPosition = mod(vPosition * gridSize + 0.5, 1.0);
+      float edgeDistance = min(min(modPosition.x, modPosition.y), modPosition.z);
+      float mask = smoothEdge(edgeDistance, lineWidth, glowRange);
+      gl_FragColor = mix(vec4(color, 1.0), vec4(0.0, 0.0, 0.0, 1.0), mask);
+    }
+  `,
   });
+
+  if (state === "DESTROYED") {
+    return <></>;
+  }
 
   return (
     <group ref={groupRef}>

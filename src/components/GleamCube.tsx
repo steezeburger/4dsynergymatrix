@@ -59,7 +59,7 @@ const GleamCube: React.FC<GleamCubeProps> = (props) => {
   }
   if (state === "PURPLE") {
     if (groupRef.current) {
-      groupRef.current.rotation.z += 500;
+      groupRef.current.rotation.y += 500;
     }
   }
 

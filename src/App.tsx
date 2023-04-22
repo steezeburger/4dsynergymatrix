@@ -6,8 +6,8 @@ import GleamCube from "./components/GleamCube";
 function App() {
   const AppContext = React.createContext({});
 
-  const numRows = 53;
-  const numCols = 53;
+  const numRows = 10;
+  const numCols = 10;
   const spacing = 1.5;
 
   const maxScore = numRows * numCols;
@@ -22,7 +22,7 @@ function App() {
     if (didDestruct) {
       setScore(score + 1);
       if (score === maxScore) {
-        alert("You win!");
+        prompt("you've won a $20 sears gift card. please send $20 to sears and i will send you the gift card. please sign the guest book if you win :)");
       }
     }
   };
@@ -31,7 +31,7 @@ function App() {
   for (let i = 0; i < numRows; i++) {
     for (let j = 0; j < numCols; j++) {
       let color = 0x00ff00
-      if (i === 26 && j === 26) {
+      if (i === 5 && j === 5) {
         color = 0xff0000
       }
       cubes.push(

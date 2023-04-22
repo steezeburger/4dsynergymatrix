@@ -1,4 +1,4 @@
-import React, {useMemo, useReducer, useRef} from "react";
+import React, {useEffect, useMemo, useReducer, useRef} from "react";
 import {MeshProps, useFrame} from "@react-three/fiber";
 import {Color, EdgesGeometry, Group, LineBasicMaterial, LineSegments, Mesh, ShaderMaterial} from "three";
 
@@ -22,7 +22,7 @@ type State = "GREEN" | "RED" | "PURPLE" | "DESTROYED";
 const stateMachine: Record<State, State> = {
   GREEN: "RED",
   RED: "PURPLE",
-  PURPLE: "GREEN",
+  PURPLE: "DESTROYED",
   DESTROYED: "DESTROYED",
 };
 
@@ -32,8 +32,6 @@ function stateReducer(state: State, action: Actions): State {
   switch (action.type) {
     case "NEXT":
       return stateMachine[state];
-    case "DESTRUCT":
-      return "DESTROYED";
     default:
       return state;
   }
@@ -45,33 +43,41 @@ const GleamCube: React.FC<GleamCubeProps> = (props) => {
 
   const firstState = props.color === 0xff0000 ? "RED" : "GREEN";
   const [state, dispatch] = useReducer(stateReducer, firstState);
+  const [shouldSpin, setShouldSpin] = React.useState(false);
   const handleClick = () => {
     if (state === "PURPLE") {
       props.handleCubeClick(true);
-      dispatch({type: "DESTRUCT"});
+      dispatch({type: "NEXT"});
     } else {
       props.handleCubeClick(false);
       dispatch({type: "NEXT"});
     }
   }
 
-  if (state === "RED") {
-    if (groupRef.current) {
-      groupRef.current.rotation.x += 500;
+  useEffect(() => {
+    if (state === "RED") {
+      if (groupRef.current) {
+        groupRef.current.rotation.x += 500;
+      }
     }
-  }
-  if (state === "PURPLE") {
-    if (groupRef.current) {
-      groupRef.current.rotation.y += 500;
+    if (state === "PURPLE") {
+      setShouldSpin(true);
     }
-  }
+  }, [state, groupRef.current]);
 
 
   useFrame((state, delta) => {
     if (groupRef.current) {
-      groupRef.current.rotation.x += 0.01;
-      groupRef.current.rotation.y += 0.01;
-      groupRef.current.rotation.z += 0.01;
+      groupRef.current.rotation.x += 0.005;
+      groupRef.current.rotation.y += 0.005;
+      groupRef.current.rotation.z += 0.005;
+    }
+    if (shouldSpin) {
+      if (meshRef.current) {
+        meshRef.current.rotation.x += 0.01;
+        meshRef.current.rotation.y += 0.01;
+        meshRef.current.rotation.z += 0.01;
+      }
     }
   });
 

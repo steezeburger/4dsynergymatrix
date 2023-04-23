@@ -1,11 +1,9 @@
-import React, {useState} from 'react';
+import React, {useState} from "react";
 import {Canvas} from "@react-three/fiber";
-import './App.css';
+import "./App.css";
 import GleamCube, {CubeState} from "./components/GleamCube";
 
 function App() {
-  const AppContext = React.createContext({});
-
   const numRows = 10;
   const numCols = 10;
   const spacing = 1.5;
@@ -20,10 +18,9 @@ function App() {
 
   const handleCubeClick = (didDestruct: boolean) => {
     setClickCount(clickCount + 1);
-    // didDestruct is true when the cube was destroyed.
-    // increase the score and check if the game is over.
     if (didDestruct) {
       setScore(score + 1);
+      // FIXME - bug here
       if (score === maxScore) {
         prompt("you've won a $20 sears gift card. please send $20 to sears and i will send you the gift card. please sign the guest book if you win :)");
       }
@@ -47,9 +44,9 @@ function App() {
           position={[
             (i - numRows / 2) * spacing,
             (j - numCols / 2) * spacing,
-            0
+            0,
           ]}
-        />
+        />,
       );
     }
   }

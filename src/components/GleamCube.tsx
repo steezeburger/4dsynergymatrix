@@ -15,7 +15,7 @@ const COLORS = {
   "GREEN": 0x00ff00,
   "PURPLE": 0xDA70D6,
   "DESTROYED": 0x000000,
-}
+};
 
 export type CubeState = "GREEN" | "RED" | "PURPLE" | "DESTROYED";
 
@@ -45,14 +45,10 @@ const GleamCube: React.FC<GleamCubeProps> = (props) => {
   const [state, dispatch] = useReducer(stateReducer, firstState);
   const [shouldSpin, setShouldSpin] = React.useState(false);
   const handleClick = () => {
-    if (state === "PURPLE") {
-      props.handleCubeClick(true);
-      dispatch({type: "NEXT"});
-    } else {
-      props.handleCubeClick(false);
-      dispatch({type: "NEXT"});
-    }
-  }
+    dispatch({type: "NEXT"});
+    const didDestruct = state === "PURPLE";
+    props.handleCubeClick(didDestruct);
+  };
 
   useEffect(() => {
     if (state === "RED") {

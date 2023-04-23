@@ -6,7 +6,7 @@ type GleamCubeProps = {
   wireframe?: boolean;
   position: [number, number, number];
   position_ij: [number, number];
-  color: number;
+  startingState?: CubeState;
   handleCubeClick: (didDestruct: boolean) => void;
 } & MeshProps;
 
@@ -17,9 +17,9 @@ const COLORS = {
   "DESTROYED": 0x000000,
 }
 
-type State = "GREEN" | "RED" | "PURPLE" | "DESTROYED";
+export type CubeState = "GREEN" | "RED" | "PURPLE" | "DESTROYED";
 
-const stateMachine: Record<State, State> = {
+const stateMachine: Record<CubeState, CubeState> = {
   GREEN: "RED",
   RED: "PURPLE",
   PURPLE: "DESTROYED",
@@ -28,7 +28,7 @@ const stateMachine: Record<State, State> = {
 
 type Actions = { type: "NEXT" } | { type: "DESTRUCT" };
 
-function stateReducer(state: State, action: Actions): State {
+function stateReducer(state: CubeState, action: Actions): CubeState {
   switch (action.type) {
     case "NEXT":
       return stateMachine[state];
@@ -41,7 +41,7 @@ const GleamCube: React.FC<GleamCubeProps> = (props) => {
   const groupRef = useRef<Group>(null);
   const meshRef = useRef<Mesh>(null);
 
-  const firstState = props.color === 0xff0000 ? "RED" : "GREEN";
+  const firstState: CubeState = props.startingState || "GREEN";
   const [state, dispatch] = useReducer(stateReducer, firstState);
   const [shouldSpin, setShouldSpin] = React.useState(false);
   const handleClick = () => {

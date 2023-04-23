@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Canvas} from "@react-three/fiber";
 import './App.css';
-import GleamCube from "./components/GleamCube";
+import GleamCube, {CubeState} from "./components/GleamCube";
 
 function App() {
   const AppContext = React.createContext({});
@@ -10,6 +10,9 @@ function App() {
   const numCols = 10;
   const spacing = 1.5;
 
+  // FIXME - it's currently possible to destroy all the cubes and have a score less than 100
+  // wait, my thinking is wrong. it's not possible to have a score less than 100.
+  // is there a cube off screen? is my math wrong?
   const maxScore = numRows * numCols;
 
   const [clickCount, setClickCount] = useState(0);
@@ -30,16 +33,16 @@ function App() {
   const cubes = [];
   for (let i = 0; i < numRows; i++) {
     for (let j = 0; j < numCols; j++) {
-      let color = 0x00ff00
+      let startingState: CubeState = "GREEN";
       if (i === 5 && j === 5) {
-        color = 0xff0000
+        startingState = "RED";
       }
       cubes.push(
         <GleamCube
           key={`${i}-${j}`}
           handleCubeClick={handleCubeClick}
           wireframe={false}
-          color={color}
+          startingState={startingState}
           position_ij={[i, j]}
           position={[
             (i - numRows / 2) * spacing,

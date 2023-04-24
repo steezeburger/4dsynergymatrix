@@ -22,7 +22,7 @@ function App() {
 
   useEffect(() => {
     if (score === MAX_SCORE) {
-      prompt("you've won a $20 sears gift card. please send $20 to sears. please sign the guest book if you win :)");
+      prompt("you've won a $20 sears gift card. please sign the guest book if you win :)");
       // TODO - create a guest book? idk, it doesn't really matter
     }
   }, [score]);

@@ -14,7 +14,6 @@ function App() {
   const [score, setScore] = useState(0);
 
   const handleCubeClick = (didDestruct: boolean) => {
-    console.log("handleCubeClick", didDestruct);
     setClickCount(clickCount + 1);
     if (didDestruct) {
       setScore(score => score + 1);

@@ -1,0 +1,14 @@
+.GleamingTheCube {
+    text-align: center;
+    background: black;
+    height: 100%;
+    width: 100%;
+}
+
+.clickCount {
+    color: white;
+}
+
+.score {
+    color: white;
+}

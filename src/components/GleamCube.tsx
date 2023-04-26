@@ -26,7 +26,7 @@ const stateMachine: Record<CubeState, CubeState> = {
   DESTROYED: "DESTROYED",
 };
 
-type Actions = { type: "NEXT" } | { type: "DESTRUCT" };
+type Actions = { type: "NEXT" };
 
 function stateReducer(state: CubeState, action: Actions): CubeState {
   switch (action.type) {
@@ -51,15 +51,15 @@ const GleamCube: React.FC<GleamCubeProps> = (props) => {
   };
 
   useEffect(() => {
-    if (state === "RED") {
-      if (groupRef.current) {
-        groupRef.current.rotation.x += 500;
+    if (props.startingState === "RED") {
+      if (meshRef.current) {
+        meshRef.current.rotation.x += 500;
       }
     }
     if (state === "PURPLE") {
       setShouldSpin(true);
     }
-  }, [state, groupRef.current]);
+  }, [state, props.startingState, groupRef.current]);
 
 
   useFrame((state, delta) => {
@@ -131,8 +131,6 @@ const GleamCube: React.FC<GleamCubeProps> = (props) => {
         ref={meshRef}
         scale={1}
         onClick={handleClick}
-        // onPointerOver={(event) => setHovered(true)}
-        // onPointerOut={(event) => setHovered(false)}
       >
         <boxGeometry args={[1, 1, 1]}/>
         <primitive object={gridShaderMaterial}/>

@@ -26,7 +26,7 @@ const stateMachine: Record<CubeState, CubeState> = {
   DESTROYED: "DESTROYED",
 };
 
-type Actions = { type: "NEXT" } | { type: "DESTRUCT" };
+type Actions = { type: "NEXT" };
 
 function stateReducer(state: CubeState, action: Actions): CubeState {
   switch (action.type) {

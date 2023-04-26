@@ -1,65 +1,36 @@
-import React, {useEffect, useState} from "react";
-import {Canvas} from "@react-three/fiber";
+import React, {useEffect, useReducer} from "react";
 import "./App.css";
-import GleamCube, {CubeState} from "./components/GleamCube";
+import GleamingTheCube from "./containers/GleamingTheCube";
 
-const NUM_ROWS = 3;
-const NUM_COLS = 3;
-const SPACING = 1.5;
+type AppState = "GLEAMING_THE_CUBE" | "SURFING_THE_CITY";
 
-const MAX_SCORE = NUM_ROWS * NUM_COLS;
+const stateMachine: Record<AppState, AppState> = {
+  GLEAMING_THE_CUBE: "SURFING_THE_CITY",
+  SURFING_THE_CITY: "GLEAMING_THE_CUBE",
+};
+
+type Actions = { type: "NEXT" };
+
+function stateReducer(state: AppState, action: Actions): AppState {
+  switch (action.type) {
+    case "NEXT":
+      return stateMachine[state];
+    default:
+      return state;
+  }
+}
 
 function App() {
-  const [clickCount, setClickCount] = useState(0);
-  const [score, setScore] = useState(0);
+  const [state, dispatch] = useReducer(stateReducer, "GLEAMING_THE_CUBE");
 
-  const handleCubeClick = (didDestruct: boolean) => {
-    setClickCount(clickCount + 1);
-    if (didDestruct) {
-      setScore(score => score + 1);
-    }
+  const nextState = () => {
+    dispatch({type: "NEXT"});
   };
-
-  useEffect(() => {
-    if (score === MAX_SCORE) {
-      prompt("you've won a $20 sears gift card. please sign the guest book if you win :)");
-      // TODO - create a guest book? idk, it doesn't really matter
-    }
-  }, [score]);
-
-
-  const cubes = [];
-  for (let i = 0; i < NUM_ROWS; i++) {
-    for (let j = 0; j < NUM_COLS; j++) {
-      let startingState: CubeState = "GREEN";
-      if (i === 1 && j === 1) {
-        startingState = "RED";
-      }
-      cubes.push(
-        <GleamCube
-          key={`${i}-${j}`}
-          handleCubeClick={handleCubeClick}
-          wireframe={false}
-          startingState={startingState}
-          position_ij={[i, j]}
-          position={[
-            (i - NUM_ROWS / 2) * SPACING,
-            (j - NUM_COLS / 2) * SPACING,
-            0,
-          ]}
-        />,
-      );
-    }
-  }
 
   return (
     <div className="App">
-      <div className="clickCount">dimension count: {clickCount}</div>
-      <div className="score">synergy score: {score}</div>
-      <Canvas>
-        <pointLight position={[10, 10, 10]}/>
-        {cubes}
-      </Canvas>
+      {state === "GLEAMING_THE_CUBE" && <GleamingTheCube continueToNextDimension={nextState}/>}
+      {state === "SURFING_THE_CITY" && <div>YOOOO</div>}
     </div>
   );
 }

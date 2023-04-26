@@ -131,8 +131,6 @@ const GleamCube: React.FC<GleamCubeProps> = (props) => {
         ref={meshRef}
         scale={1}
         onClick={handleClick}
-        // onPointerOver={(event) => setHovered(true)}
-        // onPointerOut={(event) => setHovered(false)}
       >
         <boxGeometry args={[1, 1, 1]}/>
         <primitive object={gridShaderMaterial}/>

@@ -9,30 +9,6 @@ svg {
     width: 100vw;
 }
 
-/* center div */
-.topper {
-    height: 20vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
-
-.entry {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
-
-.entry input {
-    color: #00ff00;
-    background: #000;
-    margin: 8px;
-    font-size: 24px;
-    width: 50vw;
-}
-
 .pulse:hover,
 .pulse:focus {
     -webkit-animation: pulse 1s;
@@ -57,31 +33,15 @@ svg {
     --hover: #0fff00;
 }
 
-button {
-    width: 50vw;
-    cursor: pointer;
-    color: var(--color);
-    transition: 0.25s;
-}
-
 button:hover, button:focus {
     border-color: var(--hover);
     color: #00ff00;
 }
 
-body {
-    color: #fff;
-    background: #17181c;
-    font: 300 1em "Fira Sans", sans-serif;
-    justify-content: center;
-    align-content: center;
-    align-items: center;
-    text-align: center;
-    min-height: 100vh;
-    display: flex;
-}
-
 button {
+    cursor: pointer;
+    color: var(--color);
+    transition: 0.25s;
     background: none;
     border: 2px solid;
     font: inherit;
@@ -90,11 +50,41 @@ button {
     padding: 1em 2em;
 }
 
-h1 {
-    font-weight: 400;
+.topper {
+    height: 20vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
 }
 
-code {
-    color: #e4cb58;
-    font: inherit;
+.entry {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.entry > div > input {
+    color: #00ff00;
+    background: #000;
+    margin: 8px;
+    font-size: 24px;
+}
+
+
+/* Tablet styles */
+@media screen and (min-width: 768px) {
+    .entry {
+        width: 65%;
+    }
+}
+
+/* Desktop styles */
+@media screen and (min-width: 1024px) {
+    .entry {
+        width: 75%;
+    }
 }

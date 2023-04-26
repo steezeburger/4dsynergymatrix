@@ -25,6 +25,7 @@ function stateReducer(state: AppState, action: Actions): AppState {
 
 function App() {
   const [state, dispatch] = useReducer(stateReducer, "GLEAMING_THE_CUBE");
+  // const [state, dispatch] = useReducer(stateReducer, "TOO_MUCH_SYNERGY");
 
   const nextState = () => {
     dispatch({type: "NEXT"});

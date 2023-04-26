@@ -51,15 +51,15 @@ const GleamCube: React.FC<GleamCubeProps> = (props) => {
   };
 
   useEffect(() => {
-    if (state === "RED") {
-      if (groupRef.current) {
-        groupRef.current.rotation.x += 500;
+    if (props.startingState === "RED") {
+      if (meshRef.current) {
+        meshRef.current.rotation.x += 500;
       }
     }
     if (state === "PURPLE") {
       setShouldSpin(true);
     }
-  }, [state, groupRef.current]);
+  }, [state, props.startingState, groupRef.current]);
 
 
   useFrame((state, delta) => {

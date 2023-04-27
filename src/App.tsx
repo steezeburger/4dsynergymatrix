@@ -3,12 +3,14 @@ import "./App.css";
 import GleamingTheCube from "./containers/GleamingTheCube";
 import SurfingTheCity from "./containers/SurfingTheCity";
 import SynergyGods from "./containers/SynergyGods";
+import TerrainFun from "./containers/TerrainFun";
 
-type AppState = "GLEAMING_THE_CUBE" | "SURFING_THE_CITY" | "TOO_MUCH_SYNERGY";
+type AppState = "GLEAMING_THE_CUBE" | "SURFING_THE_CITY" | "TERRAIN_FUN" | "TOO_MUCH_SYNERGY";
 
 const stateMachine: Record<AppState, AppState> = {
   GLEAMING_THE_CUBE: "SURFING_THE_CITY",
-  SURFING_THE_CITY: "TOO_MUCH_SYNERGY",
+  SURFING_THE_CITY: "TERRAIN_FUN",
+  TERRAIN_FUN: "TOO_MUCH_SYNERGY",
   TOO_MUCH_SYNERGY: "TOO_MUCH_SYNERGY",
 };
 
@@ -25,7 +27,6 @@ function stateReducer(state: AppState, action: Actions): AppState {
 
 function App() {
   const [state, dispatch] = useReducer(stateReducer, "GLEAMING_THE_CUBE");
-  // const [state, dispatch] = useReducer(stateReducer, "TOO_MUCH_SYNERGY");
 
   const nextState = () => {
     dispatch({type: "NEXT"});
@@ -35,7 +36,8 @@ function App() {
     <div className="App">
       {state === "GLEAMING_THE_CUBE" && <GleamingTheCube continueToNextDimension={nextState}/>}
       {state === "SURFING_THE_CITY" && <SurfingTheCity continueToNextDimension={nextState}/>}
-      {state === "TOO_MUCH_SYNERGY" && <SynergyGods />}
+      {state === "TERRAIN_FUN" && <TerrainFun/>}
+      {state === "TOO_MUCH_SYNERGY" && <SynergyGods/>}
     </div>
   );
 }

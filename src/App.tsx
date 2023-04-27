@@ -26,8 +26,7 @@ function stateReducer(state: AppState, action: Actions): AppState {
 }
 
 function App() {
-  // const [state, dispatch] = useReducer(stateReducer, "GLEAMING_THE_CUBE");
-  const [state, dispatch] = useReducer(stateReducer, "TERRAIN_FUN");
+  const [state, dispatch] = useReducer(stateReducer, "GLEAMING_THE_CUBE");
 
   const nextState = () => {
     dispatch({type: "NEXT"});
@@ -37,8 +36,8 @@ function App() {
     <div className="App">
       {state === "GLEAMING_THE_CUBE" && <GleamingTheCube continueToNextDimension={nextState}/>}
       {state === "SURFING_THE_CITY" && <SurfingTheCity continueToNextDimension={nextState}/>}
-      {state === "TOO_MUCH_SYNERGY" && <SynergyGods/>}
       {state === "TERRAIN_FUN" && <TerrainFun/>}
+      {state === "TOO_MUCH_SYNERGY" && <SynergyGods/>}
     </div>
   );
 }

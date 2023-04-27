@@ -5,3 +5,10 @@
     height: 100vh;
     width: 100vw;
 }
+.lower {
+    height: 70vh;
+}
+h1 {
+    margin: 0;
+    padding: 0;
+}
